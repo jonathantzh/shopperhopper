@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no,
+    shrink-to-fit=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+  <title>ShopperHopper</title>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
+  <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+  <script>
+  // Redirect console.log to Evothings Workbench.
+  if (window.hyper && window.hyper.log) { console.log = hyper.log }
+  </script>
+
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="libs/mdl/material.css">
+  <link rel="stylesheet" href="libs/mdl/icons/material-icons.css">
+</head>
+
+<body>
+
+  <script>
+    $(document).ready(function(){
+      //$('#getAdvice').on('click', getAdvice);
+    });
+
+    var app = angular.module("myShoppingList", []);
+    app.controller("myCtrl", function($scope){
+      $scope.products = ["Milk", "Bread", "Cheese"];
+      $scope.addItem = function () {
+        $scope.errortext = "";
+        if (!$scope.addMe) {return;}
+        if ($scope.products.indexOf($scope.addMe) == -1) {
+            $scope.products.push($scope.addMe);
+            $scope.addMe = '';
+        } else {
+            $scope.errortext = "The item is already in your shopping list.";
+        }
+      }
+      $scope.removeItem = function (x) {
+        $scope.errortext = "";
+        $scope.products.splice(x,1);
+      }
+
+    $scope.getAdvice = function() {
+      var currentList = $scope.products;
+
+      var soda = false;
+      var vegetable = false;
+      var fruit = false;
+      var bread = false;
+      var rice = false;
+      var alcohol = false;
+      var healthy = false;
+
+      $.each(currentList,function(index,tag){
+        //console.log(index);
+        //console.log(tag);
+        if(/^.*(coca|cola|sprite|fanta|coke).*$/igm.test(tag))
+          soda = true;
+        if(/^.*(beans?|beansprouts?|vegetables?|chai|chaisim|chaisym|kang(kong)?|kai(lan)?|brocolli|cauliflower|carrots?|carrots?|tomato|tomato(es)?|beets?|beetroot|potato(es)?|radish(es)?|garlic|onions?|ginger).*$/igm.test(tag))
+          vegetable = true;
+        if(/^.*(apples?|oranges?|grapes?|coconuts?|dragon(fruit)?|mango(es)?|durians?|mangosteens?|longans?|rambutans?|jackfruits?|papayas?|pears?|pineapples?|guavas?).*$/igm.test(tag))
+          fruit = true;
+        if(/^.*(rice).*$/igm.test(tag))
+          rice = true;
+        if(/^.*(bread).*$/igm.test(tag))
+          bread = true;
+        if(/^.*(wine|beer).*$/igm.test(tag))
+          alcohol = true;
+      })
+
+      var data = {
+        resource_id: '6bf1e41f-cdf8-47ca-ac72-c5c076f59416', // the resource id
+        limit: 5, // get 5 results
+        q: 'jones' // query for 'jones'
+      };
+      $.ajax({
+        url: 'https://data.gov.sg/api/action/datastore_search?resource_id=6bf1e41f-cdf8-47ca-ac72-c5c076f59416&q=jones',
+        data: '',
+        dataType: 'json',
+        success: function(data) {
+          console.log(data)
+        }
+      });
+
+      console.log("Soda: " + soda);
+      console.log("Vegetable: " + vegetable);
+      console.log("Fruit: " + fruit);
+      console.log("Bread: " + bread);
+      console.log("Rice: " + rice);
+      console.log("Alcohol: " + alcohol);
+      console.log("Healthier Choice: " + healthy);
+    }
+
+    });
+  </script>
+
+<div hidden class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+  <!-- Header -->
+  <header class="mdl-layout__header">
+
+    <button class="app-back mdl-layout-icon mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">arrow_back</i>
+    </button>
+
+    <div class="mdl-layout__header-row">
+
+      <!-- Title -->
+      <span class="mdl-layout-title">AhLian</span>
+      <div class="mdl-layout-spacer"></div>
+      <!-- Back button -->
+      <nav class="mdl-navigation">
+        <a class="app-back mdl-navigation__link" href="javascript:void(0)">Back</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Side menu -->
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Menu</span>
+    <nav class="mdl-navigation">
+      <a class="app-start-scan mdl-navigation__link" href="javascript:void(0)"><i class="material-icons">location_searching</i> Start Scan</a>
+      <a class="app-stop-scan mdl-navigation__link" href="javascript:void(0)"><i class="material-icons">highlight_off</i>  Stop Scan</a>
+    </nav>
+  </div>
+
+  <!-- Main -->
+  <main class="mdl-layout__content">
+
+    <!-- page-start -->
+    <section>
+      <div class="page-content">
+
+        <!-- Raised button with ripple
+        https://material.google.com/style/color.html#color-color-palette
+        -->
+        <div class="app-buttons">
+          <button class="app-start-scan mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color-text--white mdl-button--disabled">
+              Find your aisle
+          </button>
+          <button class="app-stop-scan mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color-text--white mdl-button--disabled">
+            Stop Scan
+          </button>
+        </div>
+
+        <div class="mdl-progress mdl-js-progress"></div>
+
+        <div class="app-info">This app works in Evothings Viewer 1.5 or later.</div>
+
+        <!-- Found devices are inserted into this div -->
+        <div class="app-cards"></div>
+
+      </div>
+      <!-- End page-content -->
+    </section>
+
+
+  </main>
+
+  <!-- Toast element used for messages -->
+  <div class="mdl-snackbar mdl-js-snackbar">
+    <div class="mdl-snackbar__text"></div>
+    <button class="mdl-snackbar__action" type="button"></button>
+  </div>
+
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <div ng-app="myShoppingList" ng-cloak ng-controller="myCtrl" class="w3-card-2 w3-margin" style="max-width:100%;">
+
+      <header class="w3-container w3-light-grey w3-padding-16">
+      <h1 style="
+        width: 100%;
+        font-size: 100px;
+        font-weight: 100;
+        text-align: center;
+        color: rgba(175, 47, 47, 0.30);">AhLian</h1>
+        <h3 style="
+          width: 100%;
+          font-size: 60px;
+          font-weight: 100;
+          text-align: center;
+          color: rgba(175, 47, 47, 0.30);">(pronounced: ahh-li-anne)</h3>
+      </header>
+
+      <ul class="w3-ul">
+      <li ng-repeat="x in products" class="w3-padding-16" style="font-size:24px;" >{{x}}<span ng-click="removeItem($index)" style="cursor:pointer;" class="w3-right w3-margin-right">x</span></li>
+      </ul>
+
+      <div class="w3-container w3-light-grey w3-padding-16">
+      <div class="w3-row w3-margin-top">
+      <div class="row col-xs-12 justify-content-md-center">
+        <input placeholder="What will you be shopping for today?" ng-model="addMe" class="w3-input w3-border w3-padding"   style="height:100px; font-size: 24px;">
+        <br>
+        <p class="w3-text-red">{{errortext}}</p>
+      </div> <br><br>
+
+        <div class="row justify-content-md-center">
+
+          <div class="col-xs-4 justify-content-md-center">
+            <button ng-click="addItem()" style = "height:100px; font-size:24px; width:150px" class="w3-btn w3-padding w3-green">Add</button>
+          </div>
+          <div class="col-xs-4 justify-content-md-center">&nbsp;&nbsp;&nbsp;&nbsp;
+          </div>
+          <div class="col-xs-4 justify-content-md-center">
+          <button ng-click="getAdvice()" style="height:100px; font-size:24px; width: 150px;" class = "btn btn-danger">Get Advice!</button>
+          </div>
+          <br>
+          <p class="w3-text-red" id="currentAisle"></p>
+        </div>
+      </div>
+      </div>
+
+     </div>
+</div>
+</div>
+</div>
+
+
+<script src="cordova.js"></script>
+<script src="libs/jquery/jquery-3.1.1.min.js"></script>
+<script src="libs/fastclick/fastclick.js"></script>
+<script src="libs/mdl/material.js"></script>
+<script src="app.js"></script>
+</body>
+
+</html>
