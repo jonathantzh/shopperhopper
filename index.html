@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-US">
+<meta charset="utf-8"/>
   <head>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
     <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
@@ -21,6 +22,7 @@
         if (!$scope.addMe) {return;}
         if ($scope.products.indexOf($scope.addMe) == -1) {
             $scope.products.push($scope.addMe);
+            $scope.addMe = '';
         } else {
             $scope.errortext = "The item is already in your shopping list.";
         }
@@ -29,9 +31,56 @@
         $scope.errortext = "";
         $scope.products.splice(x,1);
       }
+
     $scope.getAdvice = function() {
       var currentList = $scope.products;
-      console.log(currentList);
+
+      var soda = false;
+      var vegetable = false;
+      var fruit = false;
+      var bread = false;
+      var rice = false;
+      var alcohol = false;
+      var healthy = false;
+
+      $.each(currentList,function(index,tag){
+        //console.log(index);
+        //console.log(tag);
+        if(/^.*(coca|cola|sprite|fanta|coke).*$/igm.test(tag))
+          soda = true;
+        if(/^.*(beans?|beansprouts?|vegetables?|chai|chaisim|chaisym|kang(kong)?|kai(lan)?|brocolli|cauliflower|carrots?|carrots?|tomato|tomato(es)?|beets?|beetroot|potato(es)?|radish(es)?|garlic|onions?|ginger).*$/igm.test(tag))
+          vegetable = true;
+        if(/^.*(apples?|oranges?|grapes?|coconuts?|dragon(fruit)?|mango(es)?|durians?|mangosteens?|longans?|rambutans?|jackfruits?|papayas?|pears?|pineapples?|guavas?).*$/igm.test(tag))
+          fruit = true;
+        if(/^.*(rice).*$/igm.test(tag))
+          rice = true;
+        if(/^.*(bread).*$/igm.test(tag))
+          bread = true;
+        if(/^.*(wine|beer).*$/igm.test(tag))
+          alcohol = true;
+      })
+
+      var data = {
+        resource_id: '6bf1e41f-cdf8-47ca-ac72-c5c076f59416', // the resource id
+        limit: 5, // get 5 results
+        q: 'jones' // query for 'jones'
+      };
+      $.ajax({
+        url: 'https://data.gov.sg/api/action/datastore_search?resource_id=6bf1e41f-cdf8-47ca-ac72-c5c076f59416&q=jones',
+        data: '',
+        dataType: 'json',
+        success: function(data) {
+          console.log(data)
+        }
+      });
+
+      console.log("Soda: " + soda);
+      console.log("Vegetable: " + vegetable);
+      console.log("Fruit: " + fruit);
+      console.log("Bread: " + bread);
+      console.log("Rice: " + rice);
+      console.log("Alcohol: " + alcohol);
+      console.log("Healthier Choice: " + healthy);
     }
 
     });
@@ -48,7 +97,13 @@
         	font-size: 100px;
         	font-weight: 100;
         	text-align: center;
-        	color: rgba(175, 47, 47, 0.15);">Shopping List</h1>
+        	color: rgba(175, 47, 47, 0.30);">AhLian</h1>
+          <h3 style="
+            width: 100%;
+            font-size: 60px;
+            font-weight: 100;
+            text-align: center;
+            color: rgba(175, 47, 47, 0.30);">(pronounced: ahh-li-anne)</h3>
         </header>
 
         <ul class="w3-ul">
