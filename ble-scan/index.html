@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, user-scalable=no,
     shrink-to-fit=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 
-  <title>ShopperHopper</title>
+  <title>AhLian</title>
 
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
   <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
@@ -35,7 +35,7 @@
 
     var app = angular.module("myShoppingList", []);
     app.controller("myCtrl", function($scope){
-      $scope.products = ["Milk", "Bread", "Cheese"];
+      $scope.products = [];
       $scope.addItem = function () {
         $scope.errortext = "";
         if (!$scope.addMe) {return;}
@@ -57,7 +57,7 @@
       var soda = false;
       var vegetable = false;
       var fruit = false;
-      var bread = false;
+      var cereal = false;
       var rice = false;
       var alcohol = false;
       var healthy = false;
@@ -73,8 +73,8 @@
           fruit = true;
         if(/^.*(rice).*$/igm.test(tag))
           rice = true;
-        if(/^.*(bread).*$/igm.test(tag))
-          bread = true;
+        if(/^.*(cereal|honey|stars?|fruit loops| kellogg('s')|coco crunch).*$/igm.test(tag))
+          cereal = true;
         if(/^.*(wine|beer).*$/igm.test(tag))
           alcohol = true;
       })
@@ -96,12 +96,34 @@
       console.log("Soda: " + soda);
       console.log("Vegetable: " + vegetable);
       console.log("Fruit: " + fruit);
-      console.log("Bread: " + bread);
+      console.log("Cereal: " + cereal);
       console.log("Rice: " + rice);
       console.log("Alcohol: " + alcohol);
       console.log("Healthier Choice: " + healthy);
-    }
 
+      if(vegetable==false){
+        $('#adviceTitle').text('You need some vegetables!')
+      }
+      else if(soda==true){
+        $('#adviceTitle').text('Consider some healthier beverages')
+      }
+      else if(fruit==false){
+        $('#adviceTitle').text('You need some fruit!')
+      }
+      else if(cereal==true){
+        $('#adviceTitle').text('Consider some healthier cereals')
+      }
+      else if(rice==true){
+        $('#adviceTitle').text('Consider some healthier rice')
+      }
+      else if(alcohol==true){
+        $('#adviceTitle').text('Drink in moderation')
+      }
+      else {
+        $('#adviceTitle').text('Here are some healthy recommendations')
+
+        }
+    }
     });
   </script>
 
@@ -182,18 +204,31 @@
       <div ng-app="myShoppingList" ng-cloak ng-controller="myCtrl" class="w3-card-2 w3-margin" style="max-width:100%;">
 
       <header class="w3-container w3-light-grey w3-padding-16">
-      <h1 style="
+      <h1 class="hidden-sm-down" style="
         width: 100%;
         font-size: 100px;
         font-weight: 100;
         text-align: center;
-        color: rgba(175, 47, 47, 0.30);">AhLian</h1>
-        <h3 style="
+        color: rgba(175, 47, 47, 0.30);font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">AhLian</h1>
+        <h3 class="hidden-sm-down text-faded"style="
           width: 100%;
           font-size: 60px;
           font-weight: 100;
           text-align: center;
-          color: rgba(175, 47, 47, 0.30);">(pronounced: ahh-li-anne)</h3>
+          color: rgba(175, 47, 47, 0.30);font-style:italic;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">(pronounced: ahh-li-anne)</h3>
+
+          <h1 class="hidden-md-up" style="
+            width: 100%;
+            font-size: 60px;
+            font-weight: 100;
+            text-align: center;
+            color: rgba(175, 47, 47, 0.30);font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">AhLian</h1>
+            <h3 class="hidden-md-up text-faded"style="
+              width: 100%;
+              font-size: 32px;
+              font-weight: 100;
+              text-align: center;
+              color: rgba(175, 47, 47, 0.30);font-style:italic;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">(pronounced: ahh-li-anne)</h3>
       </header>
 
       <ul class="w3-ul">
@@ -203,24 +238,28 @@
       <div class="w3-container w3-light-grey w3-padding-16">
       <div class="w3-row w3-margin-top">
       <div class="row col-xs-12 justify-content-md-center">
-        <input placeholder="What will you be shopping for today?" ng-model="addMe" class="w3-input w3-border w3-padding"   style="height:100px; font-size: 24px;">
+        <input class = "hidden-sm-down" placeholder="Add an item..." ng-model="addMe" class="w3-input w3-border w3-padding"   style="height:100px; width: 100%; font-size: 24px; text-align:center">
+        <input class = "hidden-md-up justify-content-sm-center" placeholder="Add an item..." ng-model="addMe" class="w3-input w3-border w3-padding"   style="height:100px; width: 100%; font-size: 20px; text-align:center">
         <br>
         <p class="w3-text-red">{{errortext}}</p>
-      </div> <br><br>
+      </div> <br>
 
-        <div class="row justify-content-md-center">
+        <div class="row justify-content-md-center" style="display:block; margin:auto;">
 
           <div class="col-xs-4 justify-content-md-center">
-            <button ng-click="addItem()" style = "height:100px; font-size:24px; width:150px" class="w3-btn w3-padding w3-green">Add</button>
-          </div>
-          <div class="col-xs-4 justify-content-md-center">&nbsp;&nbsp;&nbsp;&nbsp;
-          </div>
+            <button ng-click="addItem()" style = "height:100px; font-size:24px; width:100%;" class="w3-btn w3-padding w3-green">Add</button>
+          </div><br>
           <div class="col-xs-4 justify-content-md-center">
-          <button ng-click="getAdvice()" style="height:100px; font-size:24px; width: 150px;" class = "btn btn-danger">Get Advice!</button>
+          <button ng-click="getAdvice()" style="height:100px; font-size:24px; width:100%;" class = "btn btn-danger" data-toggle="modal" data-target="#adviceModal">Get Advice!</button>
           </div>
           <br>
-          <p class="w3-text-red" id="currentAisle"></p>
+          <div class="row justify-content-md-center" style="display:block; margin:auto;">
+            <span class="" style="display:block; margin:auto; width: 100%;font-size: 24px;font-weight: 100;text-align: center;color: rgba(175, 47, 47, 0.60);font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;"> Current Aisle:
+              <span id = "currentAisle">Not found!</span>
+            </span>
+            </div>
         </div>
+
       </div>
       </div>
 
@@ -236,5 +275,27 @@
 <script src="libs/mdl/material.js"></script>
 <script src="app.js"></script>
 </body>
+
+<!-- Modal -->
+<div id="adviceModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="font-size: 24px;font-weight: 100;text-align: center;color: rgba(175, 47, 47, 0.60);font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;"">
+      <div class="modal-header">
+        <h4 id="adviceTitle" class="modal-title">Here are some healthy recommendations!</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="adviceBody"></p>
+        <p id="adviceImage"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 </html>

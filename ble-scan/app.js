@@ -76,29 +76,29 @@ function startScan()
   updateTimer = setInterval(updateDeviceList, 500)
 
   // Update UI.
-  $('.mdl-progress').addClass('mdl-progress__indeterminate');
-  showMessage('Scan started');
+  $('.mdl-progress').addClass('mdl-progress__indeterminate')
+  showMessage('Scan started')
 }
 
 function stopScan()
 {
   // Stop scan.
-  evothings.ble.stopScan();
+  evothings.ble.stopScan()
 
   // Clear devices.
-  devices = {};
+  devices = {}
 
   // Stop update timer.
   if (updateTimer)
   {
-    clearInterval(updateTimer);
-    updateTimer = null;
+    clearInterval(updateTimer)
+    updateTimer = null
   }
 
   // Update UI.
-  $('.mdl-progress').removeClass('mdl-progress__indeterminate');
-  $('.app-cards').empty();
-  hideDrawerIfVisible();
+  $('.mdl-progress').removeClass('mdl-progress__indeterminate')
+  $('.app-cards').empty()
+  hideDrawerIfVisible()
 
 }
 
@@ -106,7 +106,7 @@ function hideDrawerIfVisible()
 {
   if ($('.mdl-layout__drawer').hasClass('mdl-layout__drawer is-visible'))
   {
-    document.querySelector('.mdl-layout').MaterialLayout.toggleDrawer();
+    document.querySelector('.mdl-layout').MaterialLayout.toggleDrawer()
   }
 }
 
@@ -115,7 +115,7 @@ function showMessage(message)
   document.querySelector('.mdl-snackbar').MaterialSnackbar.showSnackbar(
   {
     message: message
-  });
+  })
 }
 
 function updateDeviceList()
@@ -124,17 +124,13 @@ function updateDeviceList()
 
   var closest = -200;
   var add = '';
-  var nearest = null;
 
   $.each(devices, function (key, device) {
     if (device.name == 'raspberrypi' && parseInt(device.rssi) > closest) {
-      add = device.address;
-      closest = device.rssi;
-      nearest = device;
+      add = device.address
+      closest = device.rssi
     }
-
-  $('#currentAisle').text(add);
-});
+  })
 
   $.each(devices, function(key, device)
   {
@@ -142,41 +138,42 @@ function updateDeviceList()
     if (device.name == 'raspberrypi' && device.timeStamp + 10000 > timeNow)
     {
        //showMessage(device.rssi)
-      if (device.address == add)
-        //displayDevice(device);
-      //else
-        highlightDevice(device);
+        if (device.address == add)
+            displayDevice(device);
+        else
+            removeDevice(device);
     }
     else
     {
       // Remove inactive device.
-      removeDevice(device);
+      removeDevice(device)
     }
-  });
+  })
 
-
-}
-
-function highlightDevice(device) {
-  //if (!deviceIsDisplayed(device))
-    createAisle(device);
-  //updateAisle(device)
+  if(add == 'B8:27:EB:74:D3:07') {
+    $('#currentAisle').text('Drinks');
+  }
+  else if (add == 'B8:27:EB:81:4B:D8') {
+    $('#currentAisle').text('Cereal');
+  }
+  else
+    $('#currentAisle').text('');
 }
 
 function displayDevice(device)
 {
   if (!deviceIsDisplayed(device))
   {
-    createDevice(device);
+    createDevice(device)
   }
 
-  updateDevice(device);
+  updateDevice(device)
 }
 
 function deviceIsDisplayed(device)
 {
-  var deviceId = '#' + getDeviceDomId(device);
-  return !!($(deviceId).length);
+  var deviceId = '#' + getDeviceDomId(device)
+  return !!($(deviceId).length)
 }
 
 function updateDevice(device)
@@ -186,29 +183,30 @@ function updateDevice(device)
   if (device.rssi < -100) { distanceBarValue = 1; }
   else if (device.rssi < 0) { distanceBarValue = 100 + device.rssi; }
 
-  var deviceId = '#' + getDeviceDomId(device);
+  var deviceId = '#' + getDeviceDomId(device)
 
   $(deviceId + ' .device-rssi')
-    .text(device.rssi);
+    .text(device.rssi)
 
   $(deviceId + ' .device-distance-bar')
-    .css('width', distanceBarValue + 'px');
+    .css('width', distanceBarValue + 'px')
 
-  if (!device.advertisementData) return;
+  if (!device.advertisementData) return
 
 
   $(deviceId + ' .device-address')
-    .text(JSON.stringify(device.address));
+    .text(JSON.stringify(device.address))
   $(deviceId + ' .device-scanRecord')
-    .text(JSON.stringify(device.scanRecord));
+    .text(JSON.stringify(device.scanRecord))
   $(deviceId + ' .device-kCBAdvDataLocalName')
-    .text(device.advertisementData.kCBAdvDataLocalName);
+    .text(device.advertisementData.kCBAdvDataLocalName)
   $(deviceId + ' .device-kCBAdvDataTxPowerLevel')
-    .text(device.advertisementData.kCBAdvDataTxPowerLevel);
+    .text(device.advertisementData.kCBAdvDataTxPowerLevel)
   $(deviceId + ' .device-kCBAdvDataIsConnectable')
-    .text(device.advertisementData.kCBAdvDataIsConnectable);
+    .text(device.advertisementData.kCBAdvDataIsConnectable)
   $(deviceId + ' .device-kCBAdvDataServiceUUIDs')
-    .text(JSON.stringify(device.advertisementData.kCBAdvDataServiceUUIDs));
+    .text(JSON.stringify(device.advertisementData.kCBAdvDataServiceUUIDs))
+
   delete device['address']
   delete device['rssi']
   delete device['scanRecord']
@@ -228,26 +226,6 @@ function createDevice(device)
     +  '</div>'
     +  '<div class="mdl-card__supporting-text">'
     +    'Address: <span class="device-address"></span><br>'
-    +    'RSSI: <span class="device-rssi"></span><br>'
-    +     '<div class="device-distance-bar" style="width:0px;height:10px;margin-top:20px;background:rgb(200,200,0)"></div>'
-    +  '</div>'
-    + '</div>')
-
-  // Add element.
-  $('.app-cards').append(element)
-}
-
-function createAisle(device)
-{
-  // Create HTML element to display device data.
-  var domId = getDeviceDomId(device);
-  var element = $(
-    '<div id="' + domId + '" class="mdl-card mdl-card--border mdl-shadow--2dp">'
-      + '<div class="mdl-card__title">'
-      + '<h2 class="mdl-card__title-text">Aisle: ' + device.name + '</h2>'
-    +  '</div>'
-    +  '<div class="mdl-card__supporting-text">'
-    +    'Address: <span class="device-address">' + device.address + '</span><br>'
     +    'RSSI: <span class="device-rssi"></span><br>'
     +     '<div class="device-distance-bar" style="width:0px;height:10px;margin-top:20px;background:rgb(200,200,0)"></div>'
     +  '</div>'
